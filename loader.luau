@@ -1,0 +1,74 @@
+-- MM2 Script Loader with Eclipse Hub Authentication
+-- This loader first authenticates with Eclipse Hub, then loads the MM2 script
+
+print("🚀 MM2 SCRIPT LOADER STARTING...")
+print("🔐 Step 1: Loading Eclipse Hub Authentication...")
+
+-- Set the main key for Eclipse Hub
+getgenv().mainKey = "nil"
+
+-- Eclipse Hub authentication loader
+local loadstring, request, assert, tostring = loadstring, request or http_request or (http and http.request) or (syn and syn.request), assert, tostring
+local eclipseUrl = "https://api.eclipsehub.xyz/auth"
+
+-- Verify executor support
+assert(loadstring and request, "Executor not Supported")
+
+-- Load Eclipse Hub authentication
+local success1, error1 = pcall(function()
+    local response = request({
+        Url = eclipseUrl .. "?key=" .. tostring(mainKey),
+        Headers = {["User-Agent"] = "Eclipse"}
+    })
+    
+    if response and response.Body then
+        loadstring(response.Body)()
+        print("✅ Eclipse Hub authentication loaded successfully!")
+    else
+        error("Failed to get response from Eclipse Hub")
+    end
+end)
+
+if not success1 then
+    warn("❌ Eclipse Hub authentication failed: " .. tostring(error1))
+    return
+end
+
+-- Wait for Eclipse Hub to fully initialize
+print("⏳ Waiting for Eclipse Hub to initialize...")
+wait(3) -- Give it 3 seconds to fully load
+
+-- Now load the MM2 script from GitHub
+print("🎯 Step 2: Loading MM2 Optimization Script...")
+
+-- GitHub raw URL for the MM2 script (you'll need to replace this with your actual GitHub link)
+local mm2ScriptUrl = "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/mm2.lua"
+
+-- Alternative: If you want to load from a different source, replace the URL above
+-- For now, I'll create a placeholder that you can update with your actual GitHub link
+
+local success2, error2 = pcall(function()
+    -- You can replace this URL with your actual GitHub raw link
+    local mm2Response = request({
+        Url = mm2ScriptUrl,
+        Method = "GET"
+    })
+    
+    if mm2Response and mm2Response.Body then
+        loadstring(mm2Response.Body)()
+        print("✅ MM2 Script loaded successfully from GitHub!")
+    else
+        error("Failed to load MM2 script from GitHub")
+    end
+end)
+
+if not success2 then
+    warn("❌ MM2 Script loading failed: " .. tostring(error2))
+    print("🔄 Falling back to local script execution...")
+    
+    -- Fallback: Load the local script content if GitHub fails
+    -- (You would paste your MM2 script content here as a fallback)
+    print("💡 Note: Update the GitHub URL in the loader with your actual repository link")
+end
+
+print("🏁 LOADER EXECUTION COMPLETE!")
