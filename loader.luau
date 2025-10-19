@@ -4,17 +4,16 @@
 print("🚀 MM2 SCRIPT LOADER STARTING...")
 print("🔐 Step 1: Loading Eclipse Hub Authentication...")
 
--- Set the main key for Eclipse Hub
+
 getgenv().mainKey = "nil"
 
--- Eclipse Hub authentication loader
 local loadstring, request, assert, tostring = loadstring, request or http_request or (http and http.request) or (syn and syn.request), assert, tostring
 local eclipseUrl = "https://api.eclipsehub.xyz/auth"
 
--- Verify executor support
+
 assert(loadstring and request, "Executor not Supported")
 
--- Load Eclipse Hub authentication
+
 local success1, error1 = pcall(function()
     local response = request({
         Url = eclipseUrl .. "?key=" .. tostring(mainKey),
@@ -34,21 +33,14 @@ if not success1 then
     return
 end
 
--- Wait for Eclipse Hub to fully initialize
 print("⏳ Waiting for Eclipse Hub to initialize...")
 wait(3) -- Give it 3 seconds to fully load
 
--- Now load the MM2 script from GitHub
 print("🎯 Step 2: Loading MM2 Optimization Script...")
 
--- GitHub raw URL for the MM2 script (you'll need to replace this with your actual GitHub link)
-local mm2ScriptUrl = "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/mm2.lua"
-
--- Alternative: If you want to load from a different source, replace the URL above
--- For now, I'll create a placeholder that you can update with your actual GitHub link
+local mm2ScriptUrl = "https://raw.githubusercontent.com/Numass/Clemou/refs/heads/main/mom2.lua"
 
 local success2, error2 = pcall(function()
-    -- You can replace this URL with your actual GitHub raw link
     local mm2Response = request({
         Url = mm2ScriptUrl,
         Method = "GET"
